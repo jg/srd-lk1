@@ -32,10 +32,19 @@ transf(xs, us, V0,n) - xs
 % Sprowadzenie do postaci z rozdzialu 3 instrukcji:
 % Znajdujemy podstawienie, w wyniku ktorego wskaznik jakosci bedzie 
 % zawierac jedynie macierze Q i R
-[D,ud,xd,An,Bn,Gn,Cn,Qn,Rn] = model_liniowy_nowy(A,B,G,C,R,r,Q,q,H,n);
+% [D,ud,xd,An,Bn,Gn,Cn,Qn,Rn] = model_liniowy_nowy(A,B,G,C,R,r,Q,q,H,n);
 
+An = A;
+Bn = B';
+Cn = C;
+Qn = Q;
+Rn = R;
 % Wyznaczanie parametrow sterowania optymalnego
 [S, T] = parametry_optymalne(An, Bn, Cn, Qn, Rn, n);
+
+D = - 0.5*inv(R)*H;
+xd = inv(2*Q - 0.5*H'*inv(R)*H) * (0.5*H'*inv(R)*r - q);
+ud = - 0.5*inv(R)*(r + H*xd);
 
 % Symulacja
 
@@ -131,23 +140,6 @@ r = 0;
 Q = eye(2);
 q = 0;
 H = [0,0];
-
-
-function[D,ud,xd,An,Bn,Gn,Cn,Qn,Rn] = model_liniowy_nowy(A,B,G,C,R,r,Q,q,H,n)
-
-% Obliczamy podstawienia
-D = - 0.5*inv(R)*H;
-xd = inv(2*Q - 0.5*H'*inv(R)*H) * (0.5*H'*inv(R)*r - q);
-ud = - 0.5*inv(R)*(r + H*xd);
-
-% Liczymy nowe macierze
-An = inv(eye(n) - B*D)*A;
-Bn = inv(eye(n) - B*D)*B;
-Gn = inv(eye(n) - B*D)*G;
-Cn = inv(eye(n) - B*D)*(C - xd + A*xd + B*ud);
-
-Qn = D'*R*D + Q + D'*H;
-Rn = R;
 
 function[S, T] = parametry_optymalne(An, Bn, Cn, Qn, Rn, n)
 
