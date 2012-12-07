@@ -121,15 +121,15 @@ function [A,B,G,C,R,r,Q,q,H] = model_liniowy(xs, us, vs)
 % us - sterowanie w punkcie stacjonarnym
 % vs - zaklocenie w punkcie stacjonarnym
 
-A = [1.5, 0; 1.7 - us(1),(1 - vs(2))^2];  % wspolczynniki przy xs
-B = [-( 1 - vs(1) ) ^ 2; -xs(1)];         % wspolczynniki przy us 
-G = [2*(1 - vs(1))*us(1), 0; 0, -2*(1 - vs(2))*xs(2)]; %wspolczynniki przy vs
+A = [1.5, 0; (-5.2 + vs(1)), (1+vs(1))^2];  % wspolczynniki przy xs
+B = [-0.1, (0.7+vs(1))];         % wspolczynniki przy us 
+G = [1, 0; 2*(1 - vs(1))*xs(1) + us(1) - xs(1), 0;]; %wspolczynniki przy vs
 C= [0;0];
 
-R = 0.5 * 0.2;
-r = 0.2 * us(1);
-Q = 0.5 * [12*(xs(1)-5)^2, 0; 0, 2];
-q = [4*(xs(1)-5)^3; 2*(xs(2)-6.1)];
+R = 0.1;
+r = 0;
+Q = eye(2);
+q = 0;
 H = [0,0];
 
 
